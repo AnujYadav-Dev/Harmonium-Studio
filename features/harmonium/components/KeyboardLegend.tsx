@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 
-import { legendItemVariants, legendVariants } from "@/constants/motionVariants";
-import type { KeyboardLegendProps } from "@/types/harmonium";
+import { legendItemVariants, legendVariants } from "@/features/harmonium/constants";
+import type { KeyboardLegendProps } from "@/features/harmonium/types";
 
 /**
  * Displays the full keyboard-to-note map for quick reference.

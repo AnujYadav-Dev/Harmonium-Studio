@@ -28,25 +28,18 @@ export interface HarmoniumAudioNode {
 }
 
 /**
- * Props for a single rendered harmonium key.
+ * Black-note positioning metadata used by the harmonium row layout.
  */
-export interface HarmoniumKeyProps {
-  note: string;
-  freq: number;
-  keyboardKey: string;
-  isBlack: boolean;
-  isActive: boolean;
-  variant: "grid" | "harmonium";
-  density?: "default" | "compact";
-  className?: string;
-  onPressStart: (keyboardKey: string) => void;
-  onPressEnd: (keyboardKey: string) => void;
+export interface PositionedBlackNote extends NoteDefinition {
+  left: string;
+  width: string;
 }
 
 /**
- * Props for the keyboard mapping legend.
+ * One rendered harmonium row containing natural and accidental notes.
  */
-export interface KeyboardLegendProps {
-  notes: NoteDefinition[];
-  activeKeys: Set<string>;
+export interface HarmoniumRow {
+  label: string;
+  whiteNotes: NoteDefinition[];
+  blackNotes: PositionedBlackNote[];
 }

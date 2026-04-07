@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 
-import { keyVariants } from "@/constants/motionVariants";
-import type { HarmoniumKeyProps } from "@/types/harmonium";
+import { keyVariants } from "@/features/harmonium/constants";
+import type { HarmoniumKeyProps } from "@/features/harmonium/types";
 
 /**
  * Renders one harmonium key with pressed-state motion feedback.

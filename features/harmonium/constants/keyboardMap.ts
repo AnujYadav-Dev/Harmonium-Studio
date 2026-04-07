@@ -1,4 +1,4 @@
-import type { NoteDefinition } from "@/types/harmonium";
+import type { NoteDefinition } from "@/features/harmonium/types";
 
 const SEMITONE_STEPS: readonly string[] = [
   "C",
