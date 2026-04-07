@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-import { keyVariants } from "@/features/harmonium/constants";
+import { keyVariants } from "@/constants/motion";
 import type { HarmoniumKeyProps } from "@/features/harmonium/types";
 
 /**

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-import { legendItemVariants, legendVariants } from "@/features/harmonium/constants";
+import { legendItemVariants, legendVariants } from "@/constants/motion";
 import type { KeyboardLegendProps } from "@/features/harmonium/types";
 
 /**

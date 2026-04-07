@@ -1,6 +1,6 @@
 "use client";
 
-import { KEYBOARD_MAP } from "@/features/harmonium/constants";
+import { KEYBOARD_MAP } from "@/features/harmonium/data";
 
 interface ManualSequencePanelProps {
   manualKeyInput: string;

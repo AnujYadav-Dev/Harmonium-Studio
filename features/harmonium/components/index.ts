@@ -1,4 +1,5 @@
 export { AudioVisualizer } from "@/features/harmonium/components/AudioVisualizer";
+export { HarmoniumStudio } from "@/features/harmonium/components/HarmoniumStudio";
 export { DroneStopsPanel } from "@/features/harmonium/components/DroneStopsPanel";
 export { HarmoniumHero } from "@/features/harmonium/components/HarmoniumHero";
 export { HarmoniumInstrumentPanel } from "@/features/harmonium/components/HarmoniumInstrumentPanel";
@@ -6,5 +7,4 @@ export { HarmoniumKey } from "@/features/harmonium/components/HarmoniumKey";
 export { KeyboardLegend } from "@/features/harmonium/components/KeyboardLegend";
 export { ManualSequencePanel } from "@/features/harmonium/components/ManualSequencePanel";
 export { OctaveShiftControls } from "@/features/harmonium/components/OctaveShiftControls";
-export { RotaryKnob } from "@/features/harmonium/components/RotaryKnob";
 export { SynthControlPanel } from "@/features/harmonium/components/SynthControlPanel";

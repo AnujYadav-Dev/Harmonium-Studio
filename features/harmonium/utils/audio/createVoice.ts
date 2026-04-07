@@ -7,7 +7,7 @@ import {
   LOWPASS_TRACKING,
   REED_DETUNE_CENTS,
   WAVE_COEFFICIENTS,
-} from "@/features/harmonium/lib/audio/constants";
+} from "@/features/harmonium/data";
 import type { HarmoniumAudioNode, SynthParams } from "@/features/harmonium/types";
 
 /**

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { KEYBOARD_MAP } from "@/features/harmonium/constants";
+import { KEYBOARD_MAP } from "@/features/harmonium/data";
 
 const MANUAL_NOTE_DURATION_MS = 320;
 const MANUAL_GAP_DURATION_MS = 40;

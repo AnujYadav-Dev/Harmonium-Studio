@@ -3,13 +3,13 @@
 import { useMemo } from "react";
 
 import { HarmoniumKey } from "@/features/harmonium/components/HarmoniumKey";
+import { KEYBOARD_NOTES } from "@/features/harmonium/data";
 import {
   COMPACT_ROW_NATURAL_TARGETS,
   HARMONIUM_ROW_NATURAL_TARGETS,
-  KEYBOARD_NOTES,
   KEYBOARD_VIEW_LABELS,
 } from "@/features/harmonium/constants";
-import { buildHarmoniumRows, getCompactNotes } from "@/features/harmonium/lib";
+import { buildHarmoniumRows, getCompactNotes } from "@/features/harmonium/utils";
 import type { NoteDefinition } from "@/features/harmonium/types";
 
 interface HarmoniumInstrumentPanelProps {

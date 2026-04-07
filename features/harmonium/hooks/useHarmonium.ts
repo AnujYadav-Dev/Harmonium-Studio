@@ -2,17 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { KEYBOARD_MAP } from "@/features/harmonium/constants";
+import { KEYBOARD_MAP, DEFAULT_SYNTH_PARAMS, DRONE_NOTES, MAX_OCTAVE_SHIFT, MIN_OCTAVE_SHIFT } from "@/features/harmonium/data";
 import {
   createDroneVoice,
   createVoice,
-  DEFAULT_SYNTH_PARAMS,
-  DRONE_NOTES,
-  MAX_OCTAVE_SHIFT,
-  MIN_OCTAVE_SHIFT,
   stopDroneVoice,
   stopOscillatorSafely,
-} from "@/features/harmonium/lib/audio";
+} from "@/features/harmonium/utils/audio";
 import type {
   DroneVoice,
   HarmoniumAudioNode,

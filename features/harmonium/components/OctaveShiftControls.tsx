@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {
   MAX_OCTAVE_SHIFT,
   MIN_OCTAVE_SHIFT,
-} from "@/features/harmonium/lib/audio";
+} from "@/features/harmonium/data";
 import type { OctaveShiftControlsProps } from "@/features/harmonium/types";
 
 /**

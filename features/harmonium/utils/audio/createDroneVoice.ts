@@ -4,7 +4,7 @@ import {
   LOWPASS_BASE,
   LOWPASS_TRACKING,
   WAVE_COEFFICIENTS,
-} from "@/features/harmonium/lib/audio/constants";
+} from "@/features/harmonium/data";
 import type { DroneVoice } from "@/features/harmonium/types";
 
 const DRONE_FADE_IN_SECONDS = 0.4;

@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-
-import { RotaryKnob } from "@/features/harmonium/components/RotaryKnob";
+import { RotaryKnob } from "@/components/ui/RotaryKnob";
 import type { SynthControlPanelProps } from "@/features/harmonium/types";
 
 /**
