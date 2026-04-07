@@ -7,9 +7,20 @@ import type { HarmoniumAudioNode, HarmoniumState } from "@/types/harmonium";
 
 const ATTACK_SECONDS = 0.08;
 const RELEASE_SECONDS = 0.6;
-const BASE_GAIN = 0.16;
-const VIBRATO_RATE = 5.1;
-const VIBRATO_DEPTH = 5.5;
+const BASE_GAIN = 0.14;
+const AIR_BLOOM_SECONDS = 0.18;
+const TREMOLO_RATE = 4.4;
+const TREMOLO_DEPTH = 0.025;
+const FILTER_Q = 0.9;
+const LOWPASS_BASE = 2400;
+const LOWPASS_TRACKING = 7;
+const HIGHPASS_CUTOFF = 140;
+const REED_DETUNE_CENTS = [-5, 0, 4] as const;
+const HARMONIC_GAINS = [0.62, 0.24, 0.1] as const;
+const WAVE_COEFFICIENTS = {
+  real: new Float32Array([0, 0, 0, 0, 0, 0]),
+  imag: new Float32Array([0, 1, 0.55, 0.22, 0.12, 0.05]),
+} as const;
 
 /**
  * Stops an oscillator safely even if it has already been scheduled to stop.
@@ -28,53 +39,91 @@ const stopOscillatorSafely = (oscillator: OscillatorNode, stopTime?: number) => 
 };
 
 /**
- * Synthesizes a harmonium-like voice with partials and gentle vibrato.
+ * Synthesizes a reed-organ style harmonium voice with shaped harmonics and tremolo.
  */
 const createVoice = (
   context: AudioContext,
   frequency: number,
 ): HarmoniumAudioNode => {
+  const lowpassFilter = context.createBiquadFilter();
+  lowpassFilter.type = "lowpass";
+  lowpassFilter.frequency.value = Math.min(
+    LOWPASS_BASE + frequency * LOWPASS_TRACKING,
+    4200,
+  );
+  lowpassFilter.Q.value = FILTER_Q;
+
+  const highpassFilter = context.createBiquadFilter();
+  highpassFilter.type = "highpass";
+  highpassFilter.frequency.value = HIGHPASS_CUTOFF;
+  highpassFilter.Q.value = 0.3;
+
   const envelopeGain = context.createGain();
   envelopeGain.gain.setValueAtTime(0.0001, context.currentTime);
+
+  highpassFilter.connect(lowpassFilter);
+  lowpassFilter.connect(envelopeGain);
   envelopeGain.connect(context.destination);
 
-  const harmonicRatios = [1, 2, 3] as const;
-  const harmonicGains = [1, 0.4, 0.2] as const;
+  const wave = context.createPeriodicWave(
+    WAVE_COEFFICIENTS.real,
+    WAVE_COEFFICIENTS.imag,
+  );
   const oscillators: OscillatorNode[] = [];
 
-  const vibratoOscillator = context.createOscillator();
-  const vibratoDepth = context.createGain();
-  vibratoOscillator.type = "sine";
-  vibratoOscillator.frequency.value = VIBRATO_RATE;
-  vibratoDepth.gain.value = VIBRATO_DEPTH;
-  vibratoOscillator.connect(vibratoDepth);
-
-  harmonicRatios.forEach((ratio, index) => {
+  HARMONIC_GAINS.forEach((partialGain, index) => {
     const oscillator = context.createOscillator();
-    const harmonicGain = context.createGain();
+    const reedGain = context.createGain();
+    const harmonicNumber = index + 1;
+    const detuneOffset = REED_DETUNE_CENTS[index];
 
-    oscillator.type = "sawtooth";
-    oscillator.frequency.value = frequency * ratio;
-    harmonicGain.gain.value = harmonicGains[index];
+    oscillator.setPeriodicWave(wave);
+    oscillator.frequency.value = frequency * harmonicNumber;
+    oscillator.detune.value = detuneOffset;
+    reedGain.gain.value = partialGain;
 
-    vibratoDepth.connect(oscillator.detune);
-    oscillator.connect(harmonicGain);
-    harmonicGain.connect(envelopeGain);
+    oscillator.connect(reedGain);
+    reedGain.connect(highpassFilter);
     oscillator.start();
     oscillators.push(oscillator);
   });
 
-  vibratoOscillator.start();
-  oscillators.push(vibratoOscillator);
+  const shimmerOscillator = context.createOscillator();
+  const shimmerGain = context.createGain();
+  shimmerOscillator.type = "triangle";
+  shimmerOscillator.frequency.value = frequency * 2;
+  shimmerOscillator.detune.value = 2;
+  shimmerGain.gain.value = 0.035;
+  shimmerOscillator.connect(shimmerGain);
+  shimmerGain.connect(highpassFilter);
+  shimmerOscillator.start();
+  oscillators.push(shimmerOscillator);
+
+  const tremoloOscillator = context.createOscillator();
+  const tremoloDepthGain = context.createGain();
+  tremoloOscillator.type = "sine";
+  tremoloOscillator.frequency.value = TREMOLO_RATE;
+  tremoloDepthGain.gain.value = TREMOLO_DEPTH;
+  tremoloOscillator.connect(tremoloDepthGain);
+  tremoloDepthGain.connect(envelopeGain.gain);
+  tremoloOscillator.start();
 
   const now = context.currentTime;
   envelopeGain.gain.cancelScheduledValues(now);
   envelopeGain.gain.setValueAtTime(0.0001, now);
-  envelopeGain.gain.exponentialRampToValueAtTime(BASE_GAIN, now + ATTACK_SECONDS);
+  envelopeGain.gain.linearRampToValueAtTime(BASE_GAIN * 0.72, now + ATTACK_SECONDS);
+  envelopeGain.gain.linearRampToValueAtTime(
+    BASE_GAIN,
+    now + ATTACK_SECONDS + AIR_BLOOM_SECONDS,
+  );
 
   return {
     oscillators,
     gainNode: envelopeGain,
+    highpassFilter,
+    lowpassFilter,
+    tremoloDepthGain,
+    tremoloOscillator,
   };
 };
 
@@ -157,6 +206,17 @@ export const useHarmonium = (): HarmoniumState & {
       0.0001,
       now + RELEASE_SECONDS,
     );
+    activeVoice.lowpassFilter.frequency.cancelScheduledValues(now);
+    activeVoice.lowpassFilter.frequency.setValueAtTime(
+      activeVoice.lowpassFilter.frequency.value,
+      now,
+    );
+    activeVoice.lowpassFilter.frequency.exponentialRampToValueAtTime(
+      700,
+      now + RELEASE_SECONDS,
+    );
+
+    stopOscillatorSafely(activeVoice.tremoloOscillator, now + RELEASE_SECONDS + 0.08);
 
     activeVoice.oscillators.forEach((oscillator) => {
       stopOscillatorSafely(oscillator, now + RELEASE_SECONDS + 0.08);
@@ -173,6 +233,7 @@ export const useHarmonium = (): HarmoniumState & {
   useEffect(() => {
     return () => {
       activeVoicesRef.current.forEach((voice) => {
+        stopOscillatorSafely(voice.tremoloOscillator);
         voice.oscillators.forEach((oscillator) => {
           stopOscillatorSafely(oscillator);
         });

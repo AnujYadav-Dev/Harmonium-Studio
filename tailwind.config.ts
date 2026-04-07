@@ -31,6 +31,10 @@ const config: Config = {
         bronze: {
           500: "#b7864f",
         },
+        wood: {
+          700: "#2a241d",
+          900: "#1b1713",
+        },
       },
       boxShadow: {
         key: "0 18px 45px rgba(15, 17, 21, 0.14)",

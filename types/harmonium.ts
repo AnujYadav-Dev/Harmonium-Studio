@@ -21,6 +21,10 @@ export interface HarmoniumState {
 export interface HarmoniumAudioNode {
   oscillators: OscillatorNode[];
   gainNode: GainNode;
+  lowpassFilter: BiquadFilterNode;
+  highpassFilter: BiquadFilterNode;
+  tremoloOscillator: OscillatorNode;
+  tremoloDepthGain: GainNode;
 }
 
 /**
@@ -32,6 +36,11 @@ export interface HarmoniumKeyProps {
   keyboardKey: string;
   isBlack: boolean;
   isActive: boolean;
+  variant: "grid" | "harmonium";
+  density?: "default" | "compact";
+  className?: string;
+  onPressStart: (keyboardKey: string) => void;
+  onPressEnd: (keyboardKey: string) => void;
 }
 
 /**
