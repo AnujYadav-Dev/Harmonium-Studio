@@ -1,9 +1,16 @@
 export type {
+  AudioVisualizerProps,
+  DroneDefinition,
+  DroneStopsPanelProps,
+  DroneVoice,
   HarmoniumAudioNode,
   HarmoniumKeyProps,
   HarmoniumRow,
   HarmoniumState,
   KeyboardLegendProps,
   NoteDefinition,
+  OctaveShiftControlsProps,
   PositionedBlackNote,
+  SynthControlPanelProps,
+  SynthParams,
 } from "@/features/harmonium/types/harmonium";

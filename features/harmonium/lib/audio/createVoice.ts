@@ -1,25 +1,24 @@
 import {
   AIR_BLOOM_SECONDS,
-  ATTACK_SECONDS,
   BASE_GAIN,
   FILTER_Q,
-  HARMONIC_GAINS,
   HIGHPASS_CUTOFF,
   LOWPASS_BASE,
   LOWPASS_TRACKING,
   REED_DETUNE_CENTS,
-  TREMOLO_DEPTH,
-  TREMOLO_RATE,
   WAVE_COEFFICIENTS,
 } from "@/features/harmonium/lib/audio/constants";
-import type { HarmoniumAudioNode } from "@/features/harmonium/types";
+import type { HarmoniumAudioNode, SynthParams } from "@/features/harmonium/types";
 
 /**
  * Synthesizes a reed-organ style harmonium voice with shaped harmonics and tremolo.
+ * Connects to the provided destination node instead of context.destination.
  */
 export const createVoice = (
   context: AudioContext,
   frequency: number,
+  destination: AudioNode,
+  synthParams: SynthParams,
 ): HarmoniumAudioNode => {
   const lowpassFilter = context.createBiquadFilter();
   lowpassFilter.type = "lowpass";
@@ -39,7 +38,7 @@ export const createVoice = (
 
   highpassFilter.connect(lowpassFilter);
   lowpassFilter.connect(envelopeGain);
-  envelopeGain.connect(context.destination);
+  envelopeGain.connect(destination);
 
   const wave = context.createPeriodicWave(
     WAVE_COEFFICIENTS.real,
@@ -47,7 +46,7 @@ export const createVoice = (
   );
   const oscillators: OscillatorNode[] = [];
 
-  HARMONIC_GAINS.forEach((partialGain, index) => {
+  synthParams.harmonicMix.forEach((partialGain, index) => {
     const oscillator = context.createOscillator();
     const reedGain = context.createGain();
     const harmonicNumber = index + 1;
@@ -78,8 +77,8 @@ export const createVoice = (
   const tremoloOscillator = context.createOscillator();
   const tremoloDepthGain = context.createGain();
   tremoloOscillator.type = "sine";
-  tremoloOscillator.frequency.value = TREMOLO_RATE;
-  tremoloDepthGain.gain.value = TREMOLO_DEPTH;
+  tremoloOscillator.frequency.value = synthParams.vibratoRate;
+  tremoloDepthGain.gain.value = synthParams.vibratoDepth;
   tremoloOscillator.connect(tremoloDepthGain);
   tremoloDepthGain.connect(envelopeGain.gain);
   tremoloOscillator.start();
@@ -87,10 +86,13 @@ export const createVoice = (
   const now = context.currentTime;
   envelopeGain.gain.cancelScheduledValues(now);
   envelopeGain.gain.setValueAtTime(0.0001, now);
-  envelopeGain.gain.linearRampToValueAtTime(BASE_GAIN * 0.72, now + ATTACK_SECONDS);
+  envelopeGain.gain.linearRampToValueAtTime(
+    BASE_GAIN * 0.72,
+    now + synthParams.attackSeconds,
+  );
   envelopeGain.gain.linearRampToValueAtTime(
     BASE_GAIN,
-    now + ATTACK_SECONDS + AIR_BLOOM_SECONDS,
+    now + synthParams.attackSeconds + AIR_BLOOM_SECONDS,
   );
 
   return {

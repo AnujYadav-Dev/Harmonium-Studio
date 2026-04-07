@@ -3,22 +3,40 @@
 import { useEffect, useState } from "react";
 
 import {
+  AudioVisualizer,
+  DroneStopsPanel,
   HarmoniumHero,
   HarmoniumInstrumentPanel,
   KeyboardLegend,
   ManualSequencePanel,
+  OctaveShiftControls,
+  SynthControlPanel,
 } from "@/features/harmonium/components";
 import { KEYBOARD_NOTES } from "@/features/harmonium/constants";
 import { useHarmonium, useManualSequence } from "@/features/harmonium/hooks";
+import { DRONE_NOTES } from "@/features/harmonium/lib/audio";
 import { isEditableTarget } from "@/features/harmonium/lib";
 
 /**
  * Renders the playable harmonium experience and keyboard listeners.
  */
 export default function Page() {
-  const { activeKeys, playNote, stopNote } = useHarmonium();
+  const {
+    activeKeys,
+    synthParams,
+    octaveShift,
+    activeDrones,
+    analyserNode,
+    playNote,
+    stopNote,
+    setSynthParams,
+    setOctaveShift,
+    toggleDrone,
+  } = useHarmonium();
+
   const [keyboardView, setKeyboardView] = useState<"grid" | "harmonium">("grid");
   const [layoutMode, setLayoutMode] = useState<"full" | "compact">("full");
+
   const {
     isManualSequencePlaying,
     manualKeyInput,
@@ -74,10 +92,17 @@ export default function Page() {
     stopNote(keyboardKey);
   };
 
+  const handleToggleDrone = (droneId: string) => {
+    void toggleDrone(droneId);
+  };
+
   return (
     <main className="min-h-screen bg-ink-950 text-paper-50">
-      <section className="mx-auto flex min-h-screen max-w-[96rem] flex-col gap-8 px-4 py-6 sm:gap-10 sm:px-6 sm:py-8 lg:px-10 lg:py-12">
+      <section className="mx-auto flex min-h-screen max-w-[96rem] flex-col gap-5 px-3 py-4 sm:gap-8 sm:px-6 sm:py-8 lg:gap-10 lg:px-10 lg:py-12">
         <HarmoniumHero />
+        <AudioVisualizer analyserNode={analyserNode} />
+
+        {/* Instrument keys directly below the visualizer */}
         <HarmoniumInstrumentPanel
           activeKeys={activeKeys}
           keyboardView={keyboardView}
@@ -87,6 +112,26 @@ export default function Page() {
           onTilePressEnd={handleTilePressEnd}
           onTilePressStart={handleTilePressStart}
         />
+
+        {/* Sound Engine Controls */}
+        <div className="grid gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <SynthControlPanel
+            onSynthParamsChange={setSynthParams}
+            synthParams={synthParams}
+          />
+          <div className="flex flex-col gap-5 sm:gap-6">
+            <DroneStopsPanel
+              activeDrones={activeDrones}
+              drones={DRONE_NOTES}
+              onToggleDrone={handleToggleDrone}
+            />
+            <OctaveShiftControls
+              octaveShift={octaveShift}
+              onOctaveShiftChange={setOctaveShift}
+            />
+          </div>
+        </div>
+
         <ManualSequencePanel
           isManualSequencePlaying={isManualSequencePlaying}
           manualKeyInput={manualKeyInput}

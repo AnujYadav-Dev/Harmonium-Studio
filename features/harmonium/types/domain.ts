@@ -9,10 +9,47 @@ export interface NoteDefinition {
 }
 
 /**
- * UI state for the currently active keyboard keys.
+ * Configurable synthesizer parameters exposed to the UI.
+ */
+export interface SynthParams {
+  masterVolume: number;
+  vibratoRate: number;
+  vibratoDepth: number;
+  harmonicMix: readonly [number, number, number];
+  attackSeconds: number;
+  releaseSeconds: number;
+}
+
+/**
+ * Definition for a drone stop note.
+ */
+export interface DroneDefinition {
+  id: string;
+  label: string;
+  note: string;
+  octave: number;
+  freq: number;
+}
+
+/**
+ * Active audio nodes for a playing drone voice.
+ */
+export interface DroneVoice {
+  oscillators: OscillatorNode[];
+  gainNode: GainNode;
+  lowpassFilter: BiquadFilterNode;
+  tremoloOscillator: OscillatorNode;
+}
+
+/**
+ * UI state for the currently active keyboard keys and synthesizer controls.
  */
 export interface HarmoniumState {
   activeKeys: Set<string>;
+  synthParams: SynthParams;
+  octaveShift: number;
+  activeDrones: Set<string>;
+  analyserNode: AnalyserNode | null;
 }
 
 /**

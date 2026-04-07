@@ -54,18 +54,18 @@ export const HarmoniumInstrumentPanel = ({
 
   return (
     <section className="pb-4">
-      <div className="rounded-[2.5rem] border border-paper-200/10 bg-gradient-to-br from-ink-900 via-ink-950 to-ink-900 p-4 shadow-panel sm:p-6">
-        <div className="mb-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] lg:items-start">
+      <div className="rounded-2xl border border-paper-200/10 bg-gradient-to-br from-ink-900 via-ink-950 to-ink-900 p-3 shadow-panel sm:rounded-[2.5rem] sm:p-6">
+        <div className="mb-4 grid gap-3 sm:mb-6 sm:gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] lg:items-start">
           <div>
-            <p className="font-body text-xs uppercase tracking-[0.28em] text-sage-400">
+            <p className="font-body text-[0.6rem] uppercase tracking-[0.24em] text-sage-400 sm:text-xs sm:tracking-[0.28em]">
               Instrument
             </p>
-            <h2 className="mt-2 font-display text-3xl text-paper-50">
+            <h2 className="mt-1.5 font-display text-xl text-paper-50 sm:mt-2 sm:text-3xl">
               Play from your keyboard or tap the on-screen keys
             </h2>
           </div>
-          <div className="space-y-4">
-            <p className="max-w-sm font-body text-sm leading-6 text-paper-300">
+          <div className="space-y-3 sm:space-y-4">
+            <p className="max-w-sm font-body text-xs leading-5 text-paper-300 sm:text-sm sm:leading-6">
               Hold a key for sustain and release it to hear the harmonium fade
               naturally. Repeated keydown events are ignored while a note is already
               active. On touch devices, press and hold any tile to play it directly.
@@ -77,7 +77,7 @@ export const HarmoniumInstrumentPanel = ({
                 return (
                   <button
                     className={[
-                      "rounded-full border px-4 py-2 font-body text-xs font-semibold uppercase tracking-[0.18em] transition",
+                      "rounded-full border px-3 py-1.5 font-body text-[0.6rem] font-semibold uppercase tracking-[0.14em] transition sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]",
                       isSelected
                         ? "border-sage-400 bg-sage-400 text-ink-950"
                         : "border-paper-200/10 bg-paper-50/5 text-paper-300 hover:border-paper-200/30 hover:bg-paper-50/10",
@@ -100,7 +100,7 @@ export const HarmoniumInstrumentPanel = ({
                 return (
                   <button
                     className={[
-                      "rounded-full border px-4 py-2 font-body text-xs font-semibold uppercase tracking-[0.18em] transition",
+                      "rounded-full border px-3 py-1.5 font-body text-[0.6rem] font-semibold uppercase tracking-[0.14em] transition sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]",
                       isSelected
                         ? "border-bronze-500 bg-bronze-500 text-ink-950"
                         : "border-paper-200/10 bg-paper-50/5 text-paper-300 hover:border-paper-200/30 hover:bg-paper-50/10",
@@ -119,7 +119,7 @@ export const HarmoniumInstrumentPanel = ({
           </div>
         </div>
 
-        <div className="rounded-[2rem] border border-paper-200/10 bg-paper-50/[0.03] p-3 sm:p-4">
+        <div className="rounded-xl border border-paper-200/10 bg-paper-50/[0.03] p-2 sm:rounded-[2rem] sm:p-4">
           {keyboardView === "grid" ? (
             <div className="space-y-4">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
