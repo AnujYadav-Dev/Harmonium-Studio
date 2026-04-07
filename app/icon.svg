@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="100" fill="#0f1115" />
+  <g transform="translate(36, 156)">
+    <!-- White Keys -->
+    <rect x="0" y="0" width="80" height="200" rx="8" fill="#f8f4ec" />
+    <rect x="90" y="0" width="80" height="200" rx="8" fill="#f8f4ec" />
+    <rect x="180" y="0" width="80" height="200" rx="8" fill="#f8f4ec" />
+    <rect x="270" y="0" width="80" height="200" rx="8" fill="#f8f4ec" />
+    <rect x="360" y="0" width="80" height="200" rx="8" fill="#f8f4ec" />
+    
+    <!-- Bronze Accent Line -->
+    <rect x="0" y="214" width="440" height="12" rx="6" fill="#b7864f" />
+
+    <!-- Black Keys -->
+    <rect x="60" y="0" width="50" height="110" rx="6" fill="#1b1713" stroke="#2a241d" stroke-width="2" />
+    <rect x="150" y="0" width="50" height="110" rx="6" fill="#1b1713" stroke="#2a241d" stroke-width="2" />
+    <rect x="330" y="0" width="50" height="110" rx="6" fill="#1b1713" stroke="#2a241d" stroke-width="2" />
+  </g>
+</svg>

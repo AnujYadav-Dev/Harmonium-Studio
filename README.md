@@ -114,33 +114,26 @@ app/
   globals.css
   layout.tsx
   page.tsx
-components/
-  HarmoniumKey.tsx
-  KeyboardLegend.tsx
-constants/
-  keyboardMap.ts
-  motionVariants.ts
-hooks/
-  useHarmonium.ts
-types/
-  harmonium.ts
+features/
+  harmonium/
+    components/
+    constants/
+    hooks/
+    lib/
+    types/
 tailwind.config.ts
 ```
 
 ## Architecture Notes
 
-- `types/harmonium.ts`
+- `features/harmonium/types/`
   Defines shared interfaces for note data, UI state, audio nodes, and component props.
-- `constants/keyboardMap.ts`
-  Builds the full keyboard-to-note map and exports sorted note collections for rendering.
-- `constants/motionVariants.ts`
-  Stores Framer Motion variants as module-level constants.
-- `hooks/useHarmonium.ts`
-  Manages `AudioContext`, note playback, release envelopes, and active voice tracking.
-- `components/HarmoniumKey.tsx`
-  Renders one visual key with animated pressed and idle states.
-- `components/KeyboardLegend.tsx`
-  Displays the keyboard mapping guide.
+- `features/harmonium/constants/`
+  Builds the full keyboard-to-note map and exports Framer Motion variants.
+- `features/harmonium/hooks/`
+  Manages `AudioContext`, note playback, release envelopes, active voice tracking, and sequences.
+- `features/harmonium/components/`
+  Renders visual keys, sequence panels, and mapping guides.
 - `app/page.tsx`
   Wires global keyboard listeners to the harmonium hook and renders the full UI.
 
