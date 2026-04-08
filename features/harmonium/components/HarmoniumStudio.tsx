@@ -1,17 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import dynamic from "next/dynamic";
 
 import {
-  AudioVisualizer,
-  DroneStopsPanel,
   HarmoniumHero,
   HarmoniumInstrumentPanel,
   KeyboardLegend,
-  ManualSequencePanel,
   OctaveShiftControls,
-  SynthControlPanel,
 } from "@/features/harmonium/components";
+
+const AudioVisualizer = dynamic(
+  () => import("@/features/harmonium/components/AudioVisualizer").then((mod) => mod.AudioVisualizer),
+  { ssr: false }
+);
+
+const DroneStopsPanel = dynamic(
+  () => import("@/features/harmonium/components/DroneStopsPanel").then((mod) => mod.DroneStopsPanel),
+  { ssr: false }
+);
+
+const ManualSequencePanel = dynamic(
+  () => import("@/features/harmonium/components/ManualSequencePanel").then((mod) => mod.ManualSequencePanel),
+  { ssr: false }
+);
+
+const SynthControlPanel = dynamic(
+  () => import("@/features/harmonium/components/SynthControlPanel").then((mod) => mod.SynthControlPanel),
+  { ssr: false }
+);
 import { KEYBOARD_NOTES } from "@/features/harmonium/data";
 import { useHarmonium, useManualSequence } from "@/features/harmonium/hooks";
 import { DRONE_NOTES } from "@/features/harmonium/data";
@@ -56,17 +73,17 @@ export const HarmoniumStudio = () => {
     stopNote,
   });
 
-  const handleTilePressStart = (keyboardKey: string) => {
+  const handleTilePressStart = useCallback((keyboardKey: string) => {
     void playNote(keyboardKey);
-  };
+  }, [playNote]);
 
-  const handleTilePressEnd = (keyboardKey: string) => {
+  const handleTilePressEnd = useCallback((keyboardKey: string) => {
     stopNote(keyboardKey);
-  };
+  }, [stopNote]);
 
-  const handleToggleDrone = (droneId: string) => {
+  const handleToggleDrone = useCallback((droneId: string) => {
     void toggleDrone(droneId);
-  };
+  }, [toggleDrone]);
 
   return (
     <section className="mx-auto flex min-h-screen max-w-[96rem] flex-col gap-5 px-3 py-4 sm:gap-8 sm:px-6 sm:py-8 lg:gap-10 lg:px-10 lg:py-12">

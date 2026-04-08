@@ -54,11 +54,11 @@ export const AudioVisualizer = ({ analyserNode }: AudioVisualizerProps) => {
       );
       const rawValue = dataArrayRef.current[Math.min(binIndex, dataLength - 1)];
       const normalizedValue = rawValue / 255;
-      const barHeight = Math.max(2 * dpr, normalizedValue * logicalHeight * 0.9);
+      const barHeight = Math.max(2 * dpr, Math.floor(normalizedValue * logicalHeight * 0.9));
 
-      const x = (i * (barWidth + BAR_GAP)) * dpr;
-      const y = (logicalHeight - barHeight / dpr) * dpr;
-      const bw = barWidth * dpr;
+      const x = Math.floor((i * (barWidth + BAR_GAP)) * dpr);
+      const y = Math.floor((logicalHeight - barHeight / dpr) * dpr);
+      const bw = Math.floor(barWidth * dpr);
       const bh = barHeight;
 
       // Gradient from sage to bronze based on amplitude.
@@ -66,9 +66,29 @@ export const AudioVisualizer = ({ analyserNode }: AudioVisualizerProps) => {
       const saturation = 30 + normalizedValue * 25;
       const lightness = 35 + normalizedValue * 30;
 
+      // Fake glow
+      if (normalizedValue > 0.05) {
+        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness + 20}%, ${normalizedValue * 0.35})`;
+        const glowSpread = Math.floor(normalizedValue * 6 * dpr);
+        const radiusGlow = Math.min((bw + glowSpread * 2) / 2, 6 * dpr);
+        
+        ctx.beginPath();
+        const gx = x - glowSpread;
+        const gy = y - glowSpread;
+        const gbw = bw + glowSpread * 2;
+        const gbh = bh + glowSpread;
+        
+        ctx.moveTo(gx + radiusGlow, gy);
+        ctx.lineTo(gx + gbw - radiusGlow, gy);
+        ctx.quadraticCurveTo(gx + gbw, gy, gx + gbw, gy + radiusGlow);
+        ctx.lineTo(gx + gbw, gy + gbh);
+        ctx.lineTo(gx, gy + gbh);
+        ctx.lineTo(gx, gy + radiusGlow);
+        ctx.quadraticCurveTo(gx, gy, gx + radiusGlow, gy);
+        ctx.fill();
+      }
+
       ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-      ctx.shadowColor = `hsla(${hue}, ${saturation}%, ${lightness + 20}%, ${normalizedValue * 0.6})`;
-      ctx.shadowBlur = normalizedValue * 12 * dpr;
 
       // Rounded bar top.
       const radius = Math.min(bw / 2, 4 * dpr);
@@ -81,8 +101,6 @@ export const AudioVisualizer = ({ analyserNode }: AudioVisualizerProps) => {
       ctx.lineTo(x, y + radius);
       ctx.quadraticCurveTo(x, y, x + radius, y);
       ctx.fill();
-
-      ctx.shadowBlur = 0;
     }
 
     animationRef.current = requestAnimationFrame(draw);

@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { motion } from "framer-motion";
 
 import { keyVariants } from "@/constants/motion";
@@ -8,19 +9,20 @@ import type { HarmoniumKeyProps } from "@/features/harmonium/types";
 /**
  * Renders one harmonium key with pressed-state motion feedback.
  */
-export const HarmoniumKey = ({
-  note,
-  freq,
-  keyboardKey,
-  isBlack,
-  isActive,
-  variant,
-  density = "default",
-  className,
-  onPressStart,
-  onPressEnd,
-}: HarmoniumKeyProps) => {
-  const isCompactHarmonium = variant === "harmonium" && density === "compact";
+export const HarmoniumKey = memo(
+  ({
+    note,
+    freq,
+    keyboardKey,
+    isBlack,
+    isActive,
+    variant,
+    density = "default",
+    className,
+    onPressStart,
+    onPressEnd,
+  }: HarmoniumKeyProps) => {
+    const isCompactHarmonium = variant === "harmonium" && density === "compact";
 
   const variantClassName =
     variant === "harmonium"
@@ -133,4 +135,7 @@ export const HarmoniumKey = ({
       </div>
     </motion.button>
   );
-};
+  }
+);
+
+HarmoniumKey.displayName = "HarmoniumKey";
